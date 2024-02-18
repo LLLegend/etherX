@@ -37,7 +37,7 @@ func main() {
 	receipts, err := client.BlockReceipts(context.Background(), bHash)
 	fmt.Println("Block Receipts: ", receipts)
 
-	tx, err := client.TransactionInBlock(context.Background(), blockHash, 1)
+	tx, err := client.TransactionInBlock(context.Background(), blockHash, 0)
 	txReceipt, err := client.TransactionReceipt(context.Background(), tx.Hash())
 	fmt.Println("tx Receipts: ", txReceipt)
 
