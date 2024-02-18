@@ -21,12 +21,13 @@ func main() {
 	blockNumber := big.NewInt(3000000)
 	start := time.Now()
 	header, err := client.HeaderByNumber(context.Background(), blockNumber)
-	runningTime := time.Since(start)
 	fmt.Println("Block Number: ", header.Number)
 	fmt.Println("Block Hash: ", header.Hash())
 	fmt.Println("Block Coinbase: ", header.Coinbase)
 	fmt.Println("Block gasUsed: ", header.GasUsed)
-
-	fmt.Println("Using ", runningTime)
+	fmt.Println("Block Time: ", header.Time)
+	fmt.Println("Tx Hash: ", header.TxHash)
+	fmt.Println("size: ", header.Size())
+	fmt.Println("Using ", time.Since(start))
 
 }
