@@ -57,6 +57,7 @@ func main() {
 	fmt.Println("------------------ Get data from leveldb-------------------")
 
 	db, err := leveldb.OpenFile(leveldbPath, nil)
+	_ = db.Close()
 	headerPrefix := []byte("h") // headerPrefix + num (uint64 big endian) + hash -> header
 	numSuffix := []byte("n")    // headerPrefix + num (uint64 big endian) + numSuffix -> hash
 	blkNum := make([]byte, 8)
@@ -80,5 +81,4 @@ func main() {
 
 	fmt.Printf("Block Hash: %x \n", blkHeader.Hash())
 	fmt.Printf("Block Coinbase: %x \n", blkHeader.Coinbase)
-	_ = db.Close()
 }
