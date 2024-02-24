@@ -1,19 +1,25 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/binary"
 	"fmt"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/eth/tracers"
 	"github.com/ethereum/go-ethereum/eth/tracers/logger"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/syndtr/goleveldb/leveldb"
 	"log"
 	"math/big"
 	"time"
 )
 
 func main() {
-	ipcPath := "/home/node01/Documents/eth-data/geth.ipc"
+	ipcPath = "/home/node01/Documents/eth-data/geth.ipc"
+	leveldbPath = "/home/node01/Documents/eth-data/geth/chaindata/"
 
 	client, err := ethclient.Dial(ipcPath)
 	if err != nil {
@@ -49,4 +55,32 @@ func main() {
 	traceConfig := &tracers.TraceConfig{Config: &logger.Config{}}
 	res, err := api.TraceTransaction(context.Background(), tx.Hash(), traceConfig)
 	fmt.Println("trace: ", res)
+
+	fmt.Println("------------------ Get data from leveldb-------------------")
+
+	db, err := leveldb.OpenFile(leveldbPath, nil)
+	headerPrefix := []byte("h") // headerPrefix + num (uint64 big endian) + hash -> header
+	numSuffix := []byte("n")    // headerPrefix + num (uint64 big endian) + numSuffix -> hash
+	blkNum := make([]byte, 8)
+	binary.BigEndian.PutUint64(blkNum, uint64(3000000)) // 把num变为 uint64 big endian类型的数据
+
+	hashKey := append(headerPrefix, blkNum...) // headerPrefix + blkNum
+	hashKey = append(hashKey, numSuffix...)    // blkNum + headerPrefix + numSuffix
+	blkHash, _ := db.Get(hashKey, nil)
+
+	//
+	fmt.Println("-------", blkHash, "---------")
+
+	headerKey := append(headerPrefix, blkNum...) // headerPrefix + blkNum
+	headerKey = append(headerKey, blkHash...)    // headerPrefix + blkNum + blkHash
+
+	blkHeaderData, _ := db.Get(headerKey, nil) // headerKey是新的key
+
+	_byteData := bytes.NewReader(blkHeaderData)
+	blkHeader := new(types.Header)
+	_ = rlp.Decode(_byteData, blkHeader)
+
+	fmt.Printf("Block Hash: %x \n", blkHeader.Hash())
+	fmt.Printf("Block Coinbase: %x \n", blkHeader.Coinbase)
+
 }
