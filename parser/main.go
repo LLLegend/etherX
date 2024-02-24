@@ -80,5 +80,5 @@ func main() {
 
 	fmt.Printf("Block Hash: %x \n", blkHeader.Hash())
 	fmt.Printf("Block Coinbase: %x \n", blkHeader.Coinbase)
-
+	_ = db.Close()
 }
