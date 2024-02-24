@@ -6,8 +6,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/eth/tracers"
-	"github.com/ethereum/go-ethereum/eth/tracers/logger"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/ethereum/go-ethereum/rpc"
@@ -50,11 +48,11 @@ func main() {
 	fmt.Println("tx Receipts: ", txReceipt)
 
 	fmt.Println("Using ", time.Since(start))
-
-	api := tracers.API{}
-	traceConfig := &tracers.TraceConfig{Config: &logger.Config{}}
-	res, err := api.TraceTransaction(context.Background(), tx.Hash(), traceConfig)
-	fmt.Println("trace: ", res)
+	//
+	//api := tracers.API{}
+	//traceConfig := &tracers.TraceConfig{Config: &logger.Config{}}
+	//res, err := api.TraceTransaction(context.Background(), tx.Hash(), traceConfig)
+	//fmt.Println("trace: ", res)
 
 	fmt.Println("------------------ Get data from leveldb-------------------")
 
