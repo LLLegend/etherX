@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"encoding/binary"
 	"fmt"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rlp"
@@ -54,21 +53,18 @@ func main() {
 	if err != nil {
 		fmt.Println("error")
 	}
-	_ = db.Close()
-	headerPrefix := []byte("h") // headerPrefix + num (uint64 big endian) + hash -> header
-	numSuffix := []byte("n")    // headerPrefix + num (uint64 big endian) + numSuffix -> hash
-	blkNum := make([]byte, 8)
-	binary.BigEndian.PutUint64(blkNum, uint64(3000000)) // 把num变为 uint64 big endian类型的数据
+	fmt.Println("LevelDB open successfully")
 
-	hashKey := append(headerPrefix, blkNum...) // headerPrefix + blkNum
-	hashKey = append(hashKey, numSuffix...)    // blkNum + headerPrefix + numSuffix
-	blkHash, _ := db.Get(hashKey, nil)
+	var num uint64
+	num = 3000000
+	// Get Block Hash Key By Number
+	blkHashKey := getBlockHeaderHashKey(num)
+	// Get Block Hash from Key
+	blkHash, _ := db.Get(blkHashKey, nil)
 
-	//
 	fmt.Println("-------", blkHash, "---------")
 
-	headerKey := append(headerPrefix, blkNum...) // headerPrefix + blkNum
-	headerKey = append(headerKey, blkHash...)    // headerPrefix + blkNum + blkHash
+	headerKey := getBlockHeaderKey(num, blkHash)
 
 	blkHeaderData, _ := db.Get(headerKey, nil) // headerKey是新的key
 
@@ -78,4 +74,6 @@ func main() {
 
 	fmt.Printf("Block Hash: %x \n", blkHeader.Hash())
 	fmt.Printf("Block Coinbase: %x \n", blkHeader.Coinbase)
+
+	_ = db.Close()
 }
