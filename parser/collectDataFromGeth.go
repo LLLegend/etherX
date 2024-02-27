@@ -42,7 +42,7 @@ func main() {
 	txReceipt, err := client.TransactionReceipt(context.Background(), tx.Hash())
 	fmt.Println("tx to: ", tx.To())
 	fmt.Println("tx input data: ", tx.Data())
-	fmt.Println("tx Receipts: ", txReceipt)
+	fmt.Println("tx Receipts BlockHash: ", txReceipt.BlockHash)
 
 	fmt.Println("Using ", time.Since(start))
 	//
