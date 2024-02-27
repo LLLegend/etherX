@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/ethereum/go-ethereum/eth/tracers"
-	"github.com/ethereum/go-ethereum/eth/tracers/logger"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
 	"log"
@@ -42,12 +40,11 @@ func main() {
 
 	tx, err := client.TransactionInBlock(context.Background(), blockHash, 0)
 	txReceipt, err := client.TransactionReceipt(context.Background(), tx.Hash())
+	fmt.Println("tx to: ", tx.To())
+	fmt.Println("tx input data: ", tx.Data())
 	fmt.Println("tx Receipts: ", txReceipt)
 
 	fmt.Println("Using ", time.Since(start))
 	//
-	api := tracers.API{}
-	traceConfig := &tracers.TraceConfig{Config: &logger.Config{}}
-	res, err := api.TraceTransaction(context.Background(), tx.Hash(), traceConfig)
-	fmt.Println("trace: ", res)
+
 }
