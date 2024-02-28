@@ -22,9 +22,12 @@ func main() {
 	var num uint64
 	num = 3000000
 	// Get Block Hash Key By Number
+	fmt.Println("111")
 	blkHashKey := getBlockHeaderHashKey(num)
+	fmt.Println("222")
 	// Get Block Hash from Key
 	blkHash, _ := db.Get(blkHashKey, nil)
+	fmt.Println("333")
 
 	fmt.Println("-------", blkHash, "---------")
 
