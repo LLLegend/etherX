@@ -15,6 +15,7 @@ func main() {
 	leveldbPath = "/home/node01/Documents/eth-data/geth/chaindata/"
 	//
 	client, err := ethclient.Dial(ipcPath)
+	defer client.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
