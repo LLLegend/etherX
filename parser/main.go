@@ -19,6 +19,7 @@ func main() {
 	}
 	fmt.Println("LevelDB open successfully")
 
+	fmt.Println("aaaaa")
 	var num uint64
 	num = 3000000
 	// Get Block Hash Key By Number
