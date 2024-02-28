@@ -15,7 +15,7 @@ func main() {
 
 	db, err := pebble.Open(leveldbPath, nil)
 	if err != nil {
-		fmt.Println("error")
+		fmt.Println(err)
 	}
 	fmt.Println("LevelDB open successfully")
 
