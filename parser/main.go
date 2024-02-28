@@ -3,9 +3,9 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/cockroachdb/pebble"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/syndtr/goleveldb/leveldb"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 
 	fmt.Println("------------------ Get data from leveldb-------------------")
 
-	db, err := leveldb.OpenFile(leveldbPath, nil)
+	db, err := pebble.Open(leveldbPath, nil)
 	if err != nil {
 		fmt.Println("error")
 	}
@@ -27,15 +27,23 @@ func main() {
 	blkHashKey := getBlockHeaderHashKey(num)
 	fmt.Println("222")
 	// Get Block Hash from Key
-	blkHash, _ := db.Get(blkHashKey, nil)
+	blkHash, closer, _ := db.Get(blkHashKey)
+	err = closer.Close()
+	if err != nil {
+		return
+	}
 	fmt.Println("333")
 
 	fmt.Println("-------", blkHash, "---------")
 
 	headerKey := getBlockHeaderKey(num, blkHash)
 	//
-	blkHeaderData, _ := db.Get(headerKey, nil) // headerKey是新的key
+	blkHeaderData, closer, _ := db.Get(headerKey) // headerKey是新的key
 	//
+	err = closer.Close()
+	if err != nil {
+		return
+	}
 	_byteData := bytes.NewReader(blkHeaderData)
 	blkHeader := new(types.Header)
 	_ = rlp.Decode(_byteData, blkHeader)
