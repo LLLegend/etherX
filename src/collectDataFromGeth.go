@@ -20,7 +20,7 @@ type Block struct {
 	gasUsed         uint64
 	gasLimit        uint64
 	blockSize       int64
-	difficulty      big.Int
+	difficulty      uint64
 	extra           string
 	externalTxCount int64
 	internalTxCount int64
@@ -79,7 +79,7 @@ func main() {
 		block.gasLimit = header.GasLimit
 		//block.logsBloom = string(bloomByte)
 		block.blockSize = int64(header.Size())
-		block.difficulty = *header.Difficulty
+		block.difficulty = header.Difficulty.Uint64()
 		block.extra = string(header.Extra)
 		block.externalTxCount = int64(numTx)
 		block.internalTxCount = 0
