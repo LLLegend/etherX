@@ -1,6 +1,8 @@
 package main
 
-import "time"
+import (
+	"time"
+)
 
 type Block struct {
 	BlockNumber     int64
@@ -55,4 +57,14 @@ type TracerConfig struct {
 type OnlyTopCallWithLog struct {
 	OnlyTopCall bool `json:"onlyTopCall"`
 	WithLog     bool `json:"withLog"`
+}
+
+type TracerResponse struct {
+	From    string           `json:"from"`
+	GasUsed string           `json:"gasUsed"`
+	To      string           `json:"to"`
+	Input   string           `json:"input"`
+	Output  string           `json:"output"`
+	Calls   []TracerResponse `json:"calls"`
+	Type    string           `json:"type"`
 }

@@ -37,7 +37,7 @@ func main() {
 	defer db.Close()
 
 	blockNumber := int64(1000000)
-	endBlockNumber := int64(1500000)
+	endBlockNumber := int64(1000100)
 
 	start := time.Now()
 	//genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
@@ -81,31 +81,44 @@ func main() {
 		// Find Tx
 		for j := 0; j < int(numTx); j++ {
 			var txb *TransactionBackground
+			var txds []*TransactionDetail
 			txb = new(TransactionBackground)
 
+			// Get Tx
 			tx, err := client.TransactionInBlock(context.Background(), blockHash, uint(j))
 			if err != nil {
 				panic(err)
 			}
-
+			// Get Sender in the Tx
+			sender, err := client.TransactionSender(context.Background(), tx, blockHash, uint(j))
+			if err != nil {
+				panic(err)
+			}
 			// Tx that doesn't have internal Tx
 			if len(tx.Data()) == 0 {
-
+				txReceipt, err := client.TransactionReceipt(context.Background(), tx.Hash())
+				if err != nil {
+					panic(err)
+				}
+				txd := parseTxData(tx, sender, txReceipt.Status)
+				txds = append(txds, txd)
 			} else {
-				var resp interface{}
+				var resp map[string]interface{}
 				if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
 					log.Fatal(err)
 				}
-				// fmt.Println(resp)
+				txd := parseTxTraceData(tx, resp["result"], sender)
+				txds = append(txds, txd...)
 				numi += 1
-			}
 
+			}
 			txb.BlockNumber = i
 			txb.TxHash = tx.Hash().String()
 			txb.PositionInBlock = j
 			txb.GasLimit = tx.Gas()
 			txb.Timestamp = tx.Time()
 			txb.Nonce = tx.Nonce()
+
 			num += 1
 
 		}
@@ -136,6 +149,7 @@ func main() {
 	//fmt.Println("tx input data: ", tx.Data())
 	//fmt.Println("tx Receipts BlockHash: ", txReceipt.BlockHash)
 	fmt.Println("Using ", time.Since(start))
+	fmt.Println("Num Tx contains internal Tx")
 	fmt.Println("Total Tx: ", num)
 	//
 
