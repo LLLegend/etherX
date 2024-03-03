@@ -37,7 +37,7 @@ func main() {
 	defer db.Close()
 
 	blockNumber := int64(1000000)
-	endBlockNumber := int64(1000100)
+	endBlockNumber := int64(2000000)
 
 	start := time.Now()
 	//genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
@@ -46,6 +46,7 @@ func main() {
 	tracerConfig := TracerConfig{Tracer: "callTracer", TracerConfig: onlyTopCallWithLog}
 
 	num := 0
+	numi := 0
 	for i := blockNumber; i <= endBlockNumber; i++ {
 		//var block Block
 		//block = *new(Block)
@@ -77,6 +78,7 @@ func main() {
 		//	//	panic(err)
 		//	//}
 		//}()
+		// Find Tx
 		for j := 0; j < int(numTx); j++ {
 			var txb *TransactionBackground
 			txb = new(TransactionBackground)
@@ -85,14 +87,19 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
-			fmt.Println(tx.Hash().String())
-			var resp interface{}
 
-			fmt.Println(tx.Data())
-			if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
-				log.Fatal(err)
+			// Tx that doesn't have internal Tx
+			if len(tx.Data()) == 0 {
+
+			} else {
+				var resp interface{}
+				if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
+					log.Fatal(err)
+				}
+				fmt.Println(resp)
+				numi += 1
 			}
-			fmt.Println(resp)
+
 			txb.BlockNumber = i
 			txb.TxHash = tx.Hash().String()
 			txb.PositionInBlock = j
