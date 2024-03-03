@@ -39,8 +39,6 @@ func main() {
 	start := time.Now()
 	genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
 	parentHash := genesis.Hash().String()
-	config := OnlyTopCallWithLog{OnlyTopCall: "False", WithLog: "True"}
-	tracerConfig := TraceConfig{Tracer: "callTracer", TracerConfig: config}
 	for i := blockNumber; i <= endBlockNumber; i++ {
 		var block Block
 		block = *new(Block)
@@ -77,18 +75,16 @@ func main() {
 			var txb *TransactionBackground
 			txb = new(TransactionBackground)
 
-			tx, err := client.TransactionInBlock(context.Background(), blockHash, 0)
+			tx, err := client.TransactionInBlock(context.Background(), blockHash, numTx)
 			if err != nil {
 				panic(err)
 			}
 
 			var resp string
 
-			req := TraceTransactionRequest{tx.Hash().String(), tracerConfig}
-			err = client.Client().Call(&resp, "debug_traceTransaction", req)
+			err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String(), "{\"tracer\": \"callTracer\"}")
 
 			fmt.Println(resp)
-			fmt.Println(req)
 			fmt.Println(1)
 			txb.BlockNumber = i
 			txb.TxHash = tx.Hash().String()
