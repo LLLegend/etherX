@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -19,4 +20,18 @@ func initMysql(username string, password string, host string, port int, DBName s
 		return nil, err
 	}
 	return db, nil
+}
+
+func showTables(db *sql.DB) {
+	res, _ := db.Query("SHOW TABLES")
+
+	var table string
+
+	for res.Next() {
+		err := res.Scan(&table)
+		if err != nil {
+			return
+		}
+		fmt.Println(table)
+	}
 }
