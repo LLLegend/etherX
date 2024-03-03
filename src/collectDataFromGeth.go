@@ -36,7 +36,7 @@ func main() {
 	fmt.Println("Successfully connect to Mysql")
 	defer db.Close()
 
-	blockNumber := int64(1000000)
+	blockNumber := int64(1)
 	endBlockNumber := int64(1500000)
 
 	start := time.Now()
