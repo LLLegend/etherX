@@ -33,8 +33,8 @@ func main() {
 	showTables(db)
 	fmt.Println()
 
-	blockNumber := int64(1)
-	endBlockNumber := int64(500000)
+	blockNumber := int64(1000000)
+	endBlockNumber := int64(1000100)
 
 	start := time.Now()
 	genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
