@@ -88,11 +88,11 @@ func main() {
 			fmt.Println(tx.Hash().String())
 			var resp interface{}
 
+			fmt.Println(tx.Data())
 			if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
 				log.Fatal(err)
 			}
 			fmt.Println(resp)
-			fmt.Println(-1)
 			txb.BlockNumber = i
 			txb.TxHash = tx.Hash().String()
 			txb.PositionInBlock = j
