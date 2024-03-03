@@ -75,8 +75,8 @@ func main() {
 			var txb *TransactionBackground
 			txb = new(TransactionBackground)
 
-			fmt.Println(numTx)
-			tx, err := client.TransactionInBlock(context.Background(), blockHash, numTx)
+			fmt.Println(j)
+			tx, err := client.TransactionInBlock(context.Background(), blockHash, uint(j))
 			if err != nil {
 				panic(err)
 			}
