@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/rpc"
 	"log"
 	"math/big"
 	"net/http"
@@ -42,6 +43,7 @@ func main() {
 	httpClient := &http.Client{
 		Transport: transport,
 	}
+	rpcclient, err := rpc.DialHTTP("127.0.0.1:8545")
 
 	showTables(db)
 	fmt.Println()
@@ -97,7 +99,7 @@ func main() {
 			var resp string
 
 			// err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String(), "{\"tracer\": \"callTracer\"}")
-			//err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String())
+			err = rpcclient.Call(&resp, "debug_traceTransaction", tx.Hash().String())
 
 			resp, err = DebugTransaction(httpClient, tx.Hash().String())
 			if err != nil {
