@@ -37,7 +37,7 @@ func main() {
 	defer db.Close()
 
 	blockNumber := int64(1000000)
-	endBlockNumber := int64(2000000)
+	endBlockNumber := int64(1500000)
 
 	start := time.Now()
 	//genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
@@ -96,7 +96,7 @@ func main() {
 				if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
 					log.Fatal(err)
 				}
-				fmt.Println(resp)
+				// fmt.Println(resp)
 				numi += 1
 			}
 
