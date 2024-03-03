@@ -87,10 +87,10 @@ func main() {
 				panic(err)
 			}
 			fmt.Println(tx.Hash().String())
-			var resp string
+			var resp interface{}
 
 			// err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String(), "{\"tracer\": \"callTracer\"}")
-			if err := rpcclient.Call(&resp, "debug_traceTransaction", `["0x`+tx.Hash().String()+`"]`); err != nil {
+			if err := rpcclient.Call(&resp, "debug_traceTransaction", tx.Hash().String()); err != nil {
 				log.Fatal(err)
 			}
 			fmt.Println(resp)
