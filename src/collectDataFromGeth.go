@@ -11,6 +11,22 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+type Block struct {
+	blockNumber     int64
+	blockHash       string
+	parentHash      string
+	coinbase        string
+	timestamp       time.Time
+	gasUsed         uint64
+	gasLimit        uint64
+	logsBloom       string
+	blockSize       int64
+	difficulty      int64
+	extra           string
+	externalTxCount int64
+	internalTxCount int64
+}
+
 func main() {
 	ipcPath = "/home/node01/Documents/eth-data/geth.ipc"
 	leveldbPath = "/home/node01/Documents/eth-data/geth/chaindata/"
@@ -34,22 +50,45 @@ func main() {
 	fmt.Println()
 
 	blockNumber := int64(1)
-	endBlockNumber := int64(5)
+	endBlockNumber := int64(50)
 
 	start := time.Now()
+	genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
+	parentHash := genesis.Hash().String()
 	for i := blockNumber; i <= endBlockNumber; i++ {
+		var block Block
+		block = *new(Block)
+
 		header, err := client.HeaderByNumber(context.Background(), big.NewInt(i))
 		if err != nil {
 
 		}
 		blockHash := header.Hash()
-		fmt.Println(blockHash.String())
-		fmt.Println(header.GasUsed)
+
 		numTx, err := client.TransactionCount(context.Background(), blockHash)
 		if numTx > 0 {
 			fmt.Println(i, numTx)
 		}
+		bloomByte, _ := header.Bloom.MarshalText()
 
+		block.blockNumber = i
+		block.blockHash = blockHash.String()
+		block.parentHash = parentHash
+		block.coinbase = header.Coinbase.String()
+		block.timestamp = time.Unix(int64(header.Time), 0)
+		block.gasUsed = header.GasUsed
+		block.gasLimit = header.GasLimit
+		block.logsBloom = string(bloomByte)
+		block.blockSize = int64(header.Size())
+		block.difficulty = header.Difficulty.Int64()
+		block.extra = string(header.Extra)
+		block.externalTxCount = int64(numTx)
+		block.internalTxCount = 0
+
+		err = insertBlocks(db, block)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	//client.Client().Call()
