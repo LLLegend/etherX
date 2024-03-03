@@ -11,21 +11,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Block struct {
-	blockNumber     int64
-	blockHash       string
-	parentHash      string
-	coinbase        string
-	timestamp       time.Time
-	gasUsed         uint64
-	gasLimit        uint64
-	blockSize       int64
-	difficulty      uint64
-	extra           string
-	externalTxCount int64
-	internalTxCount int64
-}
-
 func main() {
 	ipcPath = "/home/node01/Documents/eth-data/geth.ipc"
 	leveldbPath = "/home/node01/Documents/eth-data/geth/chaindata/"
@@ -49,45 +34,71 @@ func main() {
 	fmt.Println()
 
 	blockNumber := int64(1)
-	endBlockNumber := int64(50)
+	endBlockNumber := int64(500000)
 
 	start := time.Now()
 	genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
 	parentHash := genesis.Hash().String()
+	config := OnlyTopCallWithLog{OnlyTopCall: "False", WithLog: "True"}
+	tracerConfig := TraceConfig{Tracer: "callTracer", TracerConfig: config}
 	for i := blockNumber; i <= endBlockNumber; i++ {
 		var block Block
 		block = *new(Block)
 
 		header, err := client.HeaderByNumber(context.Background(), big.NewInt(i))
 		if err != nil {
-
-		}
-		blockHash := header.Hash()
-
-		numTx, err := client.TransactionCount(context.Background(), blockHash)
-		if numTx > 0 {
-			fmt.Println(i, numTx)
-		}
-		//bloomByte, _ := header.Bloom.MarshalText()
-
-		block.blockNumber = i
-		block.blockHash = blockHash.String()
-		block.parentHash = parentHash
-		block.coinbase = header.Coinbase.String()
-		block.timestamp = time.Unix(int64(header.Time), 0)
-		block.gasUsed = header.GasUsed
-		block.gasLimit = header.GasLimit
-		//block.logsBloom = string(bloomByte)
-		block.blockSize = int64(header.Size())
-		block.difficulty = header.Difficulty.Uint64()
-		block.extra = string(header.Extra)
-		block.externalTxCount = int64(numTx)
-		block.internalTxCount = 0
-
-		err = insertBlocks(db, block)
-		if err != nil {
 			panic(err)
 		}
+
+		blockHash := header.Hash()
+		numTx, err := client.TransactionCount(context.Background(), blockHash)
+
+		// write block data to mysql
+		go func() {
+			block.BlockNumber = i
+			block.BlockHash = blockHash.String()
+			block.ParentHash = parentHash
+			block.Coinbase = header.Coinbase.String()
+			block.Timestamp = time.Unix(int64(header.Time), 0)
+			block.GasUsed = header.GasUsed
+			block.GasLimit = header.GasLimit
+			block.BlockSize = int64(header.Size())
+			block.Difficulty = header.Difficulty.Uint64()
+			block.Extra = string(header.Extra)
+			block.ExternalTxCount = int64(numTx)
+			block.InternalTxCount = 0
+			//err = insertBlocks(db, block)
+			//if err != nil {
+			//	panic(err)
+			//}
+		}()
+
+		for j := 0; j < int(numTx); j++ {
+			var txb *TransactionBackground
+			txb = new(TransactionBackground)
+
+			tx, err := client.TransactionInBlock(context.Background(), blockHash, 0)
+			if err != nil {
+				panic(err)
+			}
+
+			var resp string
+
+			req := TraceTransactionRequest{tx.Hash().String(), tracerConfig}
+			err = client.Client().Call(&resp, "debug_traceTransaction", req)
+
+			fmt.Println(resp)
+
+			txb.BlockNumber = i
+			txb.TxHash = tx.Hash().String()
+			txb.PositionInBlock = j
+			txb.GasLimit = tx.Gas()
+			txb.Timestamp = tx.Time()
+			txb.Nonce = tx.Nonce()
+
+		}
+
+		parentHash = block.BlockHash
 	}
 
 	//client.Client().Call()

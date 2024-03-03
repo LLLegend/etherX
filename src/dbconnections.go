@@ -38,21 +38,30 @@ func showTables(db *sql.DB) {
 func insertBlocks(db *sql.DB, block Block) error {
 	_, err := db.Exec(
 		insertBlock,
-		block.blockNumber,
-		block.blockHash,
-		block.parentHash,
-		block.coinbase,
-		block.timestamp,
-		block.gasUsed,
-		block.gasLimit,
-		block.blockSize,
-		block.difficulty,
-		block.extra,
-		block.externalTxCount,
-		block.internalTxCount,
+		block.BlockNumber,
+		block.BlockHash,
+		block.ParentHash,
+		block.Coinbase,
+		block.Timestamp,
+		block.GasUsed,
+		block.GasLimit,
+		block.BlockSize,
+		block.Difficulty,
+		block.Extra,
+		block.ExternalTxCount,
+		block.InternalTxCount,
 	)
 	if err != nil {
 		fmt.Printf("insert failed, err:%v\n", err)
+		return err
+	}
+	return nil
+}
+
+func dropBlocks(db *sql.DB) error {
+	_, err := db.Exec("DROP TABLE blocks")
+	if err != nil {
+		fmt.Printf("drop failed, err:%v\n", err)
 		return err
 	}
 	return nil
