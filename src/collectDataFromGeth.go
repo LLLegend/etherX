@@ -37,11 +37,11 @@ func main() {
 	endBlockNumber := int64(1000100)
 
 	start := time.Now()
-	genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
-	parentHash := genesis.Hash().String()
+	//genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
+	// parentHash := genesis.Hash().String()
 	for i := blockNumber; i <= endBlockNumber; i++ {
-		var block Block
-		block = *new(Block)
+		//var block Block
+		//block = *new(Block)
 
 		header, err := client.HeaderByNumber(context.Background(), big.NewInt(i))
 		if err != nil {
@@ -52,25 +52,25 @@ func main() {
 		numTx, err := client.TransactionCount(context.Background(), blockHash)
 
 		// write block data to mysql
-		go func() {
-			block.BlockNumber = i
-			block.BlockHash = blockHash.String()
-			block.ParentHash = parentHash
-			block.Coinbase = header.Coinbase.String()
-			block.Timestamp = time.Unix(int64(header.Time), 0)
-			block.GasUsed = header.GasUsed
-			block.GasLimit = header.GasLimit
-			block.BlockSize = int64(header.Size())
-			block.Difficulty = header.Difficulty.Uint64()
-			block.Extra = string(header.Extra)
-			block.ExternalTxCount = int64(numTx)
-			block.InternalTxCount = 0
-			//err = insertBlocks(db, block)
-			//if err != nil {
-			//	panic(err)
-			//}
-		}()
-
+		//go func() {
+		//	block.BlockNumber = i
+		//	block.BlockHash = blockHash.String()
+		//	block.ParentHash = parentHash
+		//	block.Coinbase = header.Coinbase.String()
+		//	block.Timestamp = time.Unix(int64(header.Time), 0)
+		//	block.GasUsed = header.GasUsed
+		//	block.GasLimit = header.GasLimit
+		//	block.BlockSize = int64(header.Size())
+		//	block.Difficulty = header.Difficulty.Uint64()
+		//	block.Extra = string(header.Extra)
+		//	block.ExternalTxCount = int64(numTx)
+		//	block.InternalTxCount = 0
+		//	//err = insertBlocks(db, block)
+		//	//if err != nil {
+		//	//	panic(err)
+		//	//}
+		//}()
+		fmt.Println(i)
 		for j := 0; j < int(numTx); j++ {
 			var txb *TransactionBackground
 			txb = new(TransactionBackground)
@@ -96,7 +96,7 @@ func main() {
 
 		}
 
-		parentHash = block.BlockHash
+		//parentHash = block.BlockHash
 	}
 
 	//client.Client().Call()
