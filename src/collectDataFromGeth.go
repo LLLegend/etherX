@@ -107,6 +107,7 @@ func main() {
 				if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
 					log.Fatal(err)
 				}
+				fmt.Println(resp["result"])
 				txd := parseTxTraceData(tx, resp["result"], sender)
 				txds = append(txds, txd...)
 				numi += 1
