@@ -81,11 +81,12 @@ func main() {
 				panic(err)
 			}
 
-			var resp string
+			var resp map[string]string
 
-			err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String(), "{\"tracer\": \"callTracer\"}")
+			// err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String(), "{\"tracer\": \"callTracer\"}")
+			err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String())
 
-			fmt.Println(resp)
+			fmt.Println(resp["result"])
 			fmt.Println(1)
 			txb.BlockNumber = i
 			txb.TxHash = tx.Hash().String()
