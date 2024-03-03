@@ -61,3 +61,7 @@ type OnlyTopCallWithLog struct {
 	OnlyTopCall string `json:"onlyTopCall"`
 	WithLog     string `json:"withLog"`
 }
+
+type request struct {
+	Tx string `json:"tx"`
+}
