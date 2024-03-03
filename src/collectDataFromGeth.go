@@ -19,7 +19,6 @@ type Block struct {
 	timestamp       time.Time
 	gasUsed         uint64
 	gasLimit        uint64
-	logsBloom       string
 	blockSize       int64
 	difficulty      int64
 	extra           string
@@ -69,7 +68,7 @@ func main() {
 		if numTx > 0 {
 			fmt.Println(i, numTx)
 		}
-		bloomByte, _ := header.Bloom.MarshalText()
+		//bloomByte, _ := header.Bloom.MarshalText()
 
 		block.blockNumber = i
 		block.blockHash = blockHash.String()
@@ -78,7 +77,7 @@ func main() {
 		block.timestamp = time.Unix(int64(header.Time), 0)
 		block.gasUsed = header.GasUsed
 		block.gasLimit = header.GasLimit
-		block.logsBloom = string(bloomByte)
+		//block.logsBloom = string(bloomByte)
 		block.blockSize = int64(header.Size())
 		block.difficulty = header.Difficulty.Int64()
 		block.extra = string(header.Extra)

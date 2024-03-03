@@ -45,7 +45,6 @@ func insertBlocks(db *sql.DB, block Block) error {
 		block.timestamp,
 		block.gasUsed,
 		block.gasLimit,
-		block.logsBloom,
 		block.blockSize,
 		block.difficulty,
 		block.extra,
