@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
@@ -69,7 +70,7 @@ func main() {
 		block.GasLimit = header.GasLimit
 		block.BlockSize = int64(header.Size())
 		block.Difficulty = header.Difficulty.Uint64()
-		block.Extra = string(header.Extra)
+		block.Extra = hex.EncodeToString(header.Extra)
 		block.ExternalTxCount = int64(numTx)
 		block.InternalTxCount = 0
 		err = insertBlocks(db, block)
