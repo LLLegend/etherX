@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"log"
 	"math/big"
+	"net/http"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -29,6 +31,17 @@ func main() {
 	}
 	fmt.Println("Successfully connect to Mysql")
 	defer db.Close()
+
+	tlsConfig := &tls.Config{
+		InsecureSkipVerify: true,
+	}
+	// Create an HTTP client with the custom TLS configuration
+	transport := &http.Transport{
+		TLSClientConfig: tlsConfig,
+	}
+	httpClient := &http.Client{
+		Transport: transport,
+	}
 
 	showTables(db)
 	fmt.Println()
@@ -81,13 +94,17 @@ func main() {
 				panic(err)
 			}
 
-			var resp map[string]string
+			var resp string
 
 			// err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String(), "{\"tracer\": \"callTracer\"}")
-			err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String())
+			//err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String())
 
-			fmt.Println(resp["result"])
-			fmt.Println(1)
+			resp, err = DebugTransaction(httpClient, tx.Hash().String())
+			if err != nil {
+				panic(err)
+			}
+			fmt.Println(resp)
+			fmt.Println(-1)
 			txb.BlockNumber = i
 			txb.TxHash = tx.Hash().String()
 			txb.PositionInBlock = j
