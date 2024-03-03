@@ -32,6 +32,9 @@ func main() {
 	defer db.Close()
 
 	rpcclient, err := rpc.DialHTTP("127.0.0.1:8545")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	showTables(db)
 	fmt.Println()
@@ -87,10 +90,8 @@ func main() {
 			var resp string
 
 			// err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String(), "{\"tracer\": \"callTracer\"}")
-			err = rpcclient.Call(&resp, "debug_traceTransaction", tx.Hash().String())
-
-			if err != nil {
-				panic(err)
+			if err := rpcclient.Call(&resp, "eth_call", tx.Hash().String()); err != nil {
+				log.Fatal(err)
 			}
 			fmt.Println(resp)
 			fmt.Println(-1)
