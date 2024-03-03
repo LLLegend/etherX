@@ -31,7 +31,7 @@ func main() {
 	defer db.Close()
 
 	blockNumber := int64(1)
-	endBlockNumber := int64(1000)
+	endBlockNumber := int64(1000000)
 
 	start := time.Now()
 	for i := blockNumber; i <= endBlockNumber; i++ {
