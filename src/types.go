@@ -47,12 +47,7 @@ type Transaction struct {
 	TransactionDetail     *TransactionDetail
 }
 
-type TraceTransactionRequest struct {
-	Tx     string
-	Config TraceConfig
-}
-
-type TraceConfig struct {
+type TracerConfig struct {
 	Tracer       string             `json:"tracer"`
 	TracerConfig OnlyTopCallWithLog `json:"tracerConfig"`
 }
@@ -60,8 +55,4 @@ type TraceConfig struct {
 type OnlyTopCallWithLog struct {
 	OnlyTopCall string `json:"onlyTopCall"`
 	WithLog     string `json:"withLog"`
-}
-
-type request struct {
-	Tx string `json:"tx"`
 }

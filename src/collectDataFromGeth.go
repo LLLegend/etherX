@@ -21,6 +21,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	rpcClient, err := rpc.DialHTTP("http://127.0.0.1:8545")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rpcClient.Close()
 
 	fmt.Println("Connected to Geth")
 
@@ -31,20 +36,16 @@ func main() {
 	fmt.Println("Successfully connect to Mysql")
 	defer db.Close()
 
-	rpcclient, err := rpc.DialHTTP("http://127.0.0.1:8545")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	showTables(db)
-	fmt.Println()
-
 	blockNumber := int64(1000000)
 	endBlockNumber := int64(1000100)
 
 	start := time.Now()
 	//genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
 	// parentHash := genesis.Hash().String()
+	onlyTopCallWithLog := OnlyTopCallWithLog{OnlyTopCall: "false", WithLog: "true"}
+	tracerConfig := TracerConfig{Tracer: "callTracer", TracerConfig: onlyTopCallWithLog}
+
+	num := 0
 	for i := blockNumber; i <= endBlockNumber; i++ {
 		//var block Block
 		//block = *new(Block)
@@ -76,12 +77,10 @@ func main() {
 		//	//	panic(err)
 		//	//}
 		//}()
-		fmt.Println(i)
 		for j := 0; j < int(numTx); j++ {
 			var txb *TransactionBackground
 			txb = new(TransactionBackground)
 
-			fmt.Println(j)
 			tx, err := client.TransactionInBlock(context.Background(), blockHash, uint(j))
 			if err != nil {
 				panic(err)
@@ -89,8 +88,7 @@ func main() {
 			fmt.Println(tx.Hash().String())
 			var resp interface{}
 
-			// err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String(), "{\"tracer\": \"callTracer\"}")
-			if err := rpcclient.Call(&resp, "debug_traceTransaction", tx.Hash().String()); err != nil {
+			if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
 				log.Fatal(err)
 			}
 			fmt.Println(resp)
@@ -101,6 +99,7 @@ func main() {
 			txb.GasLimit = tx.Gas()
 			txb.Timestamp = tx.Time()
 			txb.Nonce = tx.Nonce()
+			num += 1
 
 		}
 
@@ -130,6 +129,7 @@ func main() {
 	//fmt.Println("tx input data: ", tx.Data())
 	//fmt.Println("tx Receipts BlockHash: ", txReceipt.BlockHash)
 	fmt.Println("Using ", time.Since(start))
+	fmt.Println("Total Tx: ", num)
 	//
 
 }
