@@ -88,7 +88,8 @@ func main() {
 			err = client.Client().Call(&resp, "debug_traceTransaction", req)
 
 			fmt.Println(resp)
-
+			fmt.Println(req)
+			fmt.Println(1)
 			txb.BlockNumber = i
 			txb.TxHash = tx.Hash().String()
 			txb.PositionInBlock = j
