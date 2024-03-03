@@ -40,6 +40,7 @@ func insertBlocks(db *sql.DB, block Block) error {
 		insertBlock,
 		block.blockNumber,
 		block.blockHash,
+		block.parentHash,
 		block.coinbase,
 		block.timestamp,
 		block.gasUsed,
