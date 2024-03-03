@@ -26,7 +26,6 @@ func showTables(db *sql.DB) {
 	res, _ := db.Query("SHOW TABLES")
 
 	var table string
-
 	for res.Next() {
 		err := res.Scan(&table)
 		if err != nil {

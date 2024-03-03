@@ -31,9 +31,10 @@ func main() {
 	defer db.Close()
 
 	showTables(db)
+	fmt.Println()
 
 	blockNumber := int64(1)
-	endBlockNumber := int64(1000000)
+	endBlockNumber := int64(5)
 
 	start := time.Now()
 	for i := blockNumber; i <= endBlockNumber; i++ {
@@ -42,6 +43,7 @@ func main() {
 
 		}
 		blockHash := header.Hash()
+		fmt.Println(blockHash.String())
 		numTx, err := client.TransactionCount(context.Background(), blockHash)
 		if numTx > 0 {
 			fmt.Println(i, numTx)
