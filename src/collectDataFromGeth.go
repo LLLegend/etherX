@@ -2,13 +2,11 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
 	"log"
 	"math/big"
-	"net/http"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -33,16 +31,6 @@ func main() {
 	fmt.Println("Successfully connect to Mysql")
 	defer db.Close()
 
-	tlsConfig := &tls.Config{
-		InsecureSkipVerify: true,
-	}
-	// Create an HTTP client with the custom TLS configuration
-	transport := &http.Transport{
-		TLSClientConfig: tlsConfig,
-	}
-	httpClient := &http.Client{
-		Transport: transport,
-	}
 	rpcclient, err := rpc.DialHTTP("127.0.0.1:8545")
 
 	showTables(db)
@@ -101,7 +89,6 @@ func main() {
 			// err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String(), "{\"tracer\": \"callTracer\"}")
 			err = rpcclient.Call(&resp, "debug_traceTransaction", tx.Hash().String())
 
-			resp, err = DebugTransaction(httpClient, tx.Hash().String())
 			if err != nil {
 				panic(err)
 			}
