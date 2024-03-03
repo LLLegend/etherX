@@ -83,7 +83,7 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
-
+			fmt.Println(tx.Hash().String())
 			var resp string
 
 			// err = client.Client().Call(&resp, "debug_traceTransaction", tx.Hash().String(), "{\"tracer\": \"callTracer\"}")
