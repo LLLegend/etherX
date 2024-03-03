@@ -31,7 +31,7 @@ func main() {
 	fmt.Println("Successfully connect to Mysql")
 	defer db.Close()
 
-	rpcclient, err := rpc.DialHTTP("127.0.0.1:8545")
+	rpcclient, err := rpc.DialHTTP("https://127.0.0.1:8545")
 	if err != nil {
 		log.Fatal(err)
 	}
