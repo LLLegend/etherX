@@ -42,7 +42,7 @@ func main() {
 	start := time.Now()
 	//genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
 	// parentHash := genesis.Hash().String()
-	onlyTopCallWithLog := OnlyTopCallWithLog{OnlyTopCall: "false", WithLog: "true"}
+	onlyTopCallWithLog := OnlyTopCallWithLog{OnlyTopCall: false, WithLog: true}
 	tracerConfig := TracerConfig{Tracer: "callTracer", TracerConfig: onlyTopCallWithLog}
 
 	num := 0

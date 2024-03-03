@@ -53,6 +53,6 @@ type TracerConfig struct {
 }
 
 type OnlyTopCallWithLog struct {
-	OnlyTopCall string `json:"onlyTopCall"`
-	WithLog     string `json:"withLog"`
+	OnlyTopCall bool `json:"onlyTopCall"`
+	WithLog     bool `json:"withLog"`
 }
