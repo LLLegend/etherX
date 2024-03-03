@@ -44,6 +44,7 @@ func main() {
 		}
 		blockHash := header.Hash()
 		fmt.Println(blockHash.String())
+		fmt.Println(header.GasUsed)
 		numTx, err := client.TransactionCount(context.Background(), blockHash)
 		if numTx > 0 {
 			fmt.Println(i, numTx)
