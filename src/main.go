@@ -69,7 +69,7 @@ func main() {
 	// for more details.
 	opt.Experimental.ReadSamplingMultiplier = -1
 
-	db, err := pebble.Open(leveldbPath, nil)
+	db, err := pebble.Open(leveldbPath, opt)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
