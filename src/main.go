@@ -97,8 +97,7 @@ func main() {
 	db, _ := openKeyValueDatabase(config)
 
 	// Get Block Hash Key By Number
-
-	hash := common.HexToHash("0xa108580144142887e58cf074d4ea0be93b00c13ed1992d3897edb078fabe7118")
+	hash := common.HexToHash("0x305fb171c3f9f626d122da8d7a261bc6f01311eaea02d05e4467bea3a8bd07ae")
 	blockNumKey := headerNumberKey(hash)
 	blockNum, err := db.Get(blockNumKey)
 	if err != nil {
