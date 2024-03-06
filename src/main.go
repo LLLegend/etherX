@@ -99,7 +99,7 @@ func main() {
 	num = 300000
 	// Get Block Hash Key By Number
 
-	hash := common.HexToHash("0x0e066f3c2297a5cb300593052617d1bca5946f0caa0635fdb1b85ac7e5236f34")
+	hash := common.HexToHash("0x8e38b4dbf6b11fcc3b9dee84fb7986e29ca0a02cecd8977c161ff7333329681e")
 	blockNumKey := headerNumberKey(hash)
 	fmt.Println(blockNumKey)
 
@@ -110,7 +110,13 @@ func main() {
 	}
 	fmt.Println(blockNum)
 
-	fmt.Println("111")
+	hash = common.HexToHash("0x0e066f3c2297a5cb300593052617d1bca5946f0caa0635fdb1b85ac7e5236f34")
+	state, err := db.Get(hash.Bytes())
+	if err != nil {
+		fmt.Println(err, "1111")
+		panic(err)
+	}
+	fmt.Println("state: ", state)
 
 	blkHashKey := getBlockHeaderHashKey(num)
 	fmt.Println("HeaderHashKey: ", blkHashKey)
