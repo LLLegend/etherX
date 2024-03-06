@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	leveldbPath = "/home/node01/Documents/eth-data/geth/chaindata"
+	leveldbPath = "/home/node01/Documents/eth-data/geth/chaindata/ancient/chain"
 
 	fmt.Println("------------------ Get data from pebble-------------------")
 
