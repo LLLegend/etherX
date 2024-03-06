@@ -26,10 +26,13 @@ func main() {
 	blkHashKey := getBlockHeaderHashKey(num)
 	fmt.Println("222")
 	// Get Block Hash from Key
-	blkHash, closer, _ := db.Get(blkHashKey)
+	blkHash, closer, err := db.Get(blkHashKey)
+	if err != nil {
+		panic(err)
+	}
 	err = closer.Close()
 	if err != nil {
-		return
+		panic(err)
 	}
 	fmt.Println("333")
 
