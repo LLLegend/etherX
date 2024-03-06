@@ -88,6 +88,7 @@ func main() {
 		fmt.Println("error")
 		panic(err)
 	}
+	fmt.Println("44444")
 	err = closer.Close()
 	if err != nil {
 		panic(err)
