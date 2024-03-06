@@ -94,7 +94,6 @@ func main() {
 		Handles: 2048, ReadOnly: false, Ephemeral: false}
 	db, _ := openKeyValueDatabase(config)
 
-	fmt.Println(db.db.Metrics())
 	var num uint64
 	num = 300000
 	// Get Block Hash Key By Number
@@ -103,6 +102,7 @@ func main() {
 	blkHashKey := getBlockHeaderHashKey(num)
 	fmt.Println("HeaderHashKey: ", blkHashKey)
 
+	fmt.Println(db.Has(blkHashKey))
 	dat, err := db.Get(blkHashKey)
 	if err != nil {
 		fmt.Println(err)
