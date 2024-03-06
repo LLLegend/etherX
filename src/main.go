@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/binary"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -97,7 +98,7 @@ func main() {
 
 	// Get Block Hash Key By Number
 
-	hash := common.HexToHash("0x8e38b4dbf6b11fcc3b9dee84fb7986e29ca0a02cecd8977c161ff7333329681e")
+	hash := common.HexToHash("0xa108580144142887e58cf074d4ea0be93b00c13ed1992d3897edb078fabe7118")
 	blockNumKey := headerNumberKey(hash)
 	blockNum, err := db.Get(blockNumKey)
 	if err != nil {
@@ -105,6 +106,7 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("blockNum: ", blockNum)
+	number := binary.BigEndian.Uint64(blockNum)
 
 	hash = common.HexToHash("0x0e066f3c2297a5cb300593052617d1bca5946f0caa0635fdb1b85ac7e5236f34")
 	state, err := db.Get(hash.Bytes())
@@ -113,7 +115,7 @@ func main() {
 	}
 	fmt.Println("state: ", state)
 
-	hk := headerKey(common.HexToHash("0x8e38b4dbf6b11fcc3b9dee84fb7986e29ca0a02cecd8977c161ff7333329681e"), 1000000)
+	hk := headerKey(common.HexToHash("0x8e38b4dbf6b11fcc3b9dee84fb7986e29ca0a02cecd8977c161ff7333329681e"), number)
 	header, err := db.Get(hk)
 	if err != nil {
 		panic(err)
