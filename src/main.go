@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	leveldbPath = "/home/node01/Documents/eth-data/geth/chaindata/"
+	leveldbPath = "/home/node01/Documents/eth-data/geth/chaindata"
 
 	fmt.Println("------------------ Get data from leveldb-------------------")
 
@@ -17,9 +17,8 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("LevelDB open successfully")
+	fmt.Println("Pebble open successfully")
 
-	fmt.Println("aaaaa")
 	var num uint64
 	num = 3000000
 	// Get Block Hash Key By Number

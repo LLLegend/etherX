@@ -41,8 +41,8 @@ func main() {
 	endBlockNumber := int64(1500000)
 
 	start := time.Now()
-	genesis, _ := client.HeaderByNumber(context.Background(), big.NewInt(0))
-	parentHash := genesis.Hash().String()
+	parentBlock, _ := client.HeaderByNumber(context.Background(), big.NewInt(blockNumber-1))
+	parentHash := parentBlock.Hash().String()
 	// onlyTopCallWithLog := OnlyTopCallWithLog{OnlyTopCall: false, WithLog: true}
 	// tracerConfig := TracerConfig{Tracer: "callTracer", TracerConfig: onlyTopCallWithLog}
 
