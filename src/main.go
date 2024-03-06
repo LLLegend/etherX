@@ -80,6 +80,7 @@ func main() {
 		},
 		ReadOnly: false,
 	}
+	opt.EnsureDefaults()
 	// Disable seek compaction explicitly. Check https://github.com/ethereum/go-ethereum/pull/20130
 	// for more details.
 	opt.Experimental.ReadSamplingMultiplier = -1
