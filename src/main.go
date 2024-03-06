@@ -95,64 +95,30 @@ func main() {
 		Handles: 2048, ReadOnly: false, Ephemeral: false}
 	db, _ := openKeyValueDatabase(config)
 
-	var num uint64
-	num = 300000
 	// Get Block Hash Key By Number
 
 	hash := common.HexToHash("0x8e38b4dbf6b11fcc3b9dee84fb7986e29ca0a02cecd8977c161ff7333329681e")
 	blockNumKey := headerNumberKey(hash)
-	fmt.Println(blockNumKey)
-
 	blockNum, err := db.Get(blockNumKey)
-	if err != nil {
-		fmt.Println(err, "1111")
-		panic(err)
-	}
-	fmt.Println(blockNum)
-
-	hash = common.HexToHash("0x0e066f3c2297a5cb300593052617d1bca5946f0caa0635fdb1b85ac7e5236f34")
-	state, err := db.Get(hash.Bytes())
-	if err != nil {
-		fmt.Println(err, "1111")
-		panic(err)
-	}
-	fmt.Println("state: ", state)
-
-	blkHashKey := getBlockHeaderHashKey(num)
-	fmt.Println("HeaderHashKey: ", blkHashKey)
-
-	fmt.Println(db.Has(blkHashKey))
-	dat, err := db.Get(blkHashKey)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
 	}
-	ret := make([]byte, len(dat))
-	copy(ret, dat)
+	fmt.Println("blockNum: ", blockNum)
 
-	fmt.Println("2121221")
-	// Get Block Hash from Key
-	blkHash, err := db.Get(blkHashKey)
-	if err != nil {
-		fmt.Println("error")
-		panic(err)
-	}
-	fmt.Println("44444")
+	hash = common.HexToHash("0x0e066f3c2297a5cb300593052617d1bca5946f0caa0635fdb1b85ac7e5236f34")
+	state, err := db.Get(hash.Bytes())
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("333")
+	fmt.Println("state: ", state)
 
-	fmt.Println("-------", blkHash, "---------")
-
-	headerKey := getBlockHeaderKey(num, blkHash)
-	//
-	blkHeaderData, _ := db.Get(headerKey) // headerKey是新的key
-
+	hk := headerKey(common.HexToHash("0x8e38b4dbf6b11fcc3b9dee84fb7986e29ca0a02cecd8977c161ff7333329681e"), 1000000)
+	header, err := db.Get(hk)
 	if err != nil {
-		return
+		panic(err)
 	}
-	_byteData := bytes.NewReader(blkHeaderData)
+	_byteData := bytes.NewReader(header)
 	blkHeader := new(types.Header)
 	_ = rlp.Decode(_byteData, blkHeader)
 	//

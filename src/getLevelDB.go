@@ -139,3 +139,15 @@ func getBlockHeaderKey(number uint64, hash []byte) []byte {
 func headerNumberKey(hash common.Hash) []byte {
 	return append(headerNumberPrefix, hash.Bytes()...)
 }
+
+func headerKey(hash common.Hash, num uint64) []byte {
+	return append(append(headerPrefix, encodeBlockNumber(num)...), hash.Bytes()...)
+}
+
+func bodyKey(hash common.Hash, num uint64) []byte {
+	return append(append(headerPrefix, encodeBlockNumber(num)...), hash.Bytes()...)
+}
+
+func receiptKey(hash common.Hash, num uint64) []byte {
+	return append(append(blockReceiptsPrefix, encodeBlockNumber(num)...), hash.Bytes()...)
+}
