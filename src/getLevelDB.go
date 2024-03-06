@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/binary"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/metrics"
 )
 
@@ -133,4 +134,8 @@ func getBlockHeaderHashKey(num uint64) []byte {
 
 func getBlockHeaderKey(number uint64, hash []byte) []byte {
 	return append(append(append([]byte("h"), encodeBlockNumber(number)...), hash...))
+}
+
+func headerNumberKey(hash common.Hash) []byte {
+	return append(headerNumberPrefix, hash.Bytes()...)
 }

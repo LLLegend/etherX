@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rlp"
 )
@@ -97,6 +98,18 @@ func main() {
 	var num uint64
 	num = 300000
 	// Get Block Hash Key By Number
+
+	hash := common.HexToHash("0x8e38b4dbf6b11fcc3b9dee84fb7986e29ca0a02cecd8977c161ff7333329681e")
+	blockNumKey := headerNumberKey(hash)
+	fmt.Println(blockNumKey)
+
+	blockNum, err := db.Get(blockNumKey)
+	if err != nil {
+		fmt.Println(err, "1111")
+		panic(err)
+	}
+	fmt.Println(blockNum)
+
 	fmt.Println("111")
 
 	blkHashKey := getBlockHeaderHashKey(num)
