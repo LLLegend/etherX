@@ -116,12 +116,12 @@ func main() {
 	fmt.Println("state: ", state)
 
 	accountHash := common.HexToHash("0xb4bfEfC30A60B87380e377F8B96CC3b2E65A8F64")
-	valueKey := accountTrieValueKey(accountHash)
-	value, err := db.Get(valueKey)
+	codeKey := accountTrieCodeKey(accountHash)
+	value, err := db.Get(codeKey)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Account Value: ", value)
+	fmt.Println("Code: ", value)
 
 	hk := headerKey(hash, number)
 	header, err := db.Get(hk)
