@@ -95,8 +95,20 @@ func main() {
 	num = 3000000
 	// Get Block Hash Key By Number
 	fmt.Println("111")
+
 	blkHashKey := getBlockHeaderHashKey(num)
 	fmt.Println("HeaderHashKey: ", blkHashKey)
+
+	dat, closer, err := db.Get(blkHashKey)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	ret := make([]byte, len(dat))
+	copy(ret, dat)
+	closer.Close()
+
+	fmt.Println("2121221")
 	// Get Block Hash from Key
 	blkHash, closer, err := db.Get(blkHashKey)
 	if err != nil {
