@@ -15,21 +15,42 @@ func main() {
 
 	fmt.Println("------------------ Get data from pebble-------------------")
 
-	maxMemTableSize := (1<<31)<<(^uint(0)>>63) - 1
 	cache := 2048
+	handles := 2048
+
+	// The max memtable size is limited by the uint32 offsets stored in
+	// internal/arenaskl.node, DeferredBatchOp, and flushableBatchEntry.
+	//
+	// - MaxUint32 on 64-bit platforms;
+	// - MaxInt on 32-bit platforms.
+	//
+	// It is used when slices are limited to Uint32 on 64-bit platforms (the
+	// length limit for slices is naturally MaxInt on 32-bit platforms).
+	//
+	// Taken from https://github.com/cockroachdb/pebble/blob/master/internal/constants/constants.go
+	maxMemTableSize := (1<<31)<<(^uint(0)>>63) - 1
+
 	// Two memory tables is configured which is identical to leveldb,
 	// including a frozen memory table and another live one.
 	memTableLimit := 2
 	memTableSize := cache * 1024 * 1024 / 2 / memTableLimit
+
+	// The memory table size is currently capped at maxMemTableSize-1 due to a
+	// known bug in the pebble where maxMemTableSize is not recognized as a
+	// valid size.
+	//
+	// TODO use the maxMemTableSize as the maximum table size once the issue
+	// in pebble is fixed.
 	if memTableSize >= maxMemTableSize {
 		memTableSize = maxMemTableSize - 1
 	}
+
 	opt := &pebble.Options{
 		// Pebble has a single combined cache area and the write
 		// buffers are taken from this too. Assign all available
 		// memory allowance for cache.
 		Cache:        pebble.NewCache(int64(cache * 1024 * 1024)),
-		MaxOpenFiles: 2048,
+		MaxOpenFiles: handles,
 
 		// The size of memory table(as well as the write buffer).
 		// Note, there may have more than two memory tables in the system.
@@ -58,12 +79,6 @@ func main() {
 			{TargetFileSize: 2 * 1024 * 1024, FilterPolicy: bloom.FilterPolicy(10)},
 		},
 		ReadOnly: false,
-		//EventListener: &pebble.EventListener{
-		//	CompactionBegin: db.onCompactionBegin,
-		//	CompactionEnd:   db.onCompactionEnd,
-		//	WriteStallBegin: db.onWriteStallBegin,
-		//	WriteStallEnd:   db.onWriteStallEnd,
-		//},
 	}
 	// Disable seek compaction explicitly. Check https://github.com/ethereum/go-ethereum/pull/20130
 	// for more details.
