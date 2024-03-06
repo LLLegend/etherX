@@ -107,6 +107,7 @@ func main() {
 	}
 	fmt.Println("blockNum: ", blockNum)
 	number := binary.BigEndian.Uint64(blockNum)
+	fmt.Println(number)
 
 	hash = common.HexToHash("0x0e066f3c2297a5cb300593052617d1bca5946f0caa0635fdb1b85ac7e5236f34")
 	state, err := db.Get(hash.Bytes())
