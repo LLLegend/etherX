@@ -95,7 +95,7 @@ func main() {
 	db, _ := openKeyValueDatabase(config)
 
 	var num uint64
-	num = 3000000
+	num = 300000
 	// Get Block Hash Key By Number
 	fmt.Println("111")
 
