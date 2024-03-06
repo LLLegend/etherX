@@ -16,7 +16,7 @@ func main() {
 	fmt.Println("------------------ Get data from pebble-------------------")
 
 	maxMemTableSize := (1<<31)<<(^uint(0)>>63) - 1
-	cache := 1024
+	cache := 2048
 	// Two memory tables is configured which is identical to leveldb,
 	// including a frozen memory table and another live one.
 	memTableLimit := 2
@@ -29,7 +29,7 @@ func main() {
 		// buffers are taken from this too. Assign all available
 		// memory allowance for cache.
 		Cache:        pebble.NewCache(int64(cache * 1024 * 1024)),
-		MaxOpenFiles: 32,
+		MaxOpenFiles: 2048,
 
 		// The size of memory table(as well as the write buffer).
 		// Note, there may have more than two memory tables in the system.
