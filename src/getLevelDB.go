@@ -151,3 +151,15 @@ func bodyKey(hash common.Hash, num uint64) []byte {
 func receiptKey(hash common.Hash, num uint64) []byte {
 	return append(append(blockReceiptsPrefix, encodeBlockNumber(num)...), hash.Bytes()...)
 }
+
+func accountTrieValueKey(hash common.Hash) []byte {
+	return append(SnapshotAccountPrefix, hash.Bytes()...)
+}
+
+func accountTrieCodeKey(hash common.Hash) []byte {
+	return append(CodePrefix, hash.Bytes()...)
+}
+
+func accountTrieStorageKey(hash common.Hash) []byte {
+	return append(SnapshotStoragePrefix, hash.Bytes()...)
+}
