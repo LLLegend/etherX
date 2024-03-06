@@ -81,7 +81,7 @@ func main() {
 	// Get Block Hash Key By Number
 	fmt.Println("111")
 	blkHashKey := getBlockHeaderHashKey(num)
-	fmt.Println("HeaderHashKey: ", num)
+	fmt.Println("HeaderHashKey: ", blkHashKey)
 	// Get Block Hash from Key
 	blkHash, closer, err := db.Get(blkHashKey)
 	if err != nil {
