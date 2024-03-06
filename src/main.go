@@ -116,7 +116,7 @@ func main() {
 	}
 	fmt.Println("state: ", state)
 
-	hk := headerKey(common.HexToHash("0x8e38b4dbf6b11fcc3b9dee84fb7986e29ca0a02cecd8977c161ff7333329681e"), number)
+	hk := headerKey(hash, number)
 	header, err := db.Get(hk)
 	if err != nil {
 		panic(err)
