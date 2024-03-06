@@ -11,11 +11,12 @@ import (
 func main() {
 	leveldbPath = "/home/node01/Documents/eth-data/geth/chaindata"
 
-	fmt.Println("------------------ Get data from leveldb-------------------")
+	fmt.Println("------------------ Get data from pebble-------------------")
 
 	db, err := pebble.Open(leveldbPath, nil)
 	if err != nil {
 		fmt.Println(err)
+		panic(err)
 	}
 	fmt.Println("Pebble open successfully")
 
