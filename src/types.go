@@ -59,6 +59,13 @@ type OnlyTopCallWithLog struct {
 	WithLog     bool `json:"withLog"`
 }
 
+type LogBody struct {
+	Address  string   `json:"address"`
+	Topics   []string `json:"topics"`
+	Data     string   `json:"data"`
+	Position string   `json:"position"`
+}
+
 type TracerBody struct {
 	From    string       `json:"from"`
 	GasUsed string       `json:"gasUsed"`
@@ -67,6 +74,7 @@ type TracerBody struct {
 	Output  string       `json:"output"`
 	Calls   []TracerBody `json:"calls"`
 	Type    string       `json:"type"`
+	Logs    []LogBody    `json:"logs"`
 }
 
 type TracerResponse struct {
