@@ -37,11 +37,11 @@ func main() {
 	fmt.Println("Successfully connect to Mysql")
 	defer db.Close()
 
-	blockNumber := int64(2000000)
-	endBlockNumber := int64(2000010)
+	blockNumber := uint64(2000000)
+	endBlockNumber := uint64(2000010)
 
 	start := time.Now()
-	parentBlock, _ := client.HeaderByNumber(context.Background(), big.NewInt(blockNumber-1))
+	parentBlock, _ := client.HeaderByNumber(context.Background(), big.NewInt(int64(blockNumber-1)))
 	parentHash := parentBlock.Hash().String()
 	onlyTopCallWithLog := OnlyTopCallWithLog{OnlyTopCall: false, WithLog: true}
 	tracerConfig := TracerConfig{Tracer: "callTracer", TracerConfig: onlyTopCallWithLog}
@@ -52,7 +52,7 @@ func main() {
 		var block Block
 		block = *new(Block)
 
-		header, err := client.HeaderByNumber(context.Background(), big.NewInt(i))
+		header, err := client.HeaderByNumber(context.Background(), big.NewInt(int64(i)))
 		if err != nil {
 			panic(err)
 		}
@@ -68,10 +68,10 @@ func main() {
 		block.Timestamp = time.Unix(int64(header.Time), 0)
 		block.GasUsed = header.GasUsed
 		block.GasLimit = header.GasLimit
-		block.BlockSize = int64(header.Size())
+		block.BlockSize = uint64(header.Size())
 		block.Difficulty = header.Difficulty.Uint64()
 		block.Extra = hex.EncodeToString(header.Extra)
-		block.ExternalTxCount = int64(numTx)
+		block.ExternalTxCount = uint64(numTx)
 		// TO DO
 		//block.InternalTxCount = 0
 		//err = insertBlocks(db, block)
@@ -80,7 +80,7 @@ func main() {
 		//}
 
 		// Find Tx
-		for j := 0; j < int(numTx); j++ {
+		for j := uint64(0); j < uint64(numTx); j++ {
 			var txb *TransactionBackground
 			txb = new(TransactionBackground)
 
@@ -92,15 +92,14 @@ func main() {
 				panic(err)
 			}
 
-			// Get Sender in the Tx
-			sender, err := client.TransactionSender(context.Background(), tx, blockHash, uint(j))
-			if err != nil {
-				panic(err)
-			}
-
 			// Tx that doesn't have internal Tx
 			if len(tx.Data()) == 0 {
 				txReceipt, err := client.TransactionReceipt(context.Background(), tx.Hash())
+				if err != nil {
+					panic(err)
+				}
+				// Get Sender in the Tx
+				sender, err := client.TransactionSender(context.Background(), tx, blockHash, uint(j))
 				if err != nil {
 					panic(err)
 				}
@@ -112,7 +111,7 @@ func main() {
 					log.Fatal(err)
 				}
 				//txd := parseTxTraceData(tx, []byte(fmt.Sprintf("%v", resp["result"])), sender)
-				txd := parseTxTraceData(tx, resp, sender)
+				txd := parseTxTraceData(tx, resp)
 				txds = append(txds, txd...)
 				numi += 1
 

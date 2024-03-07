@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"log"
@@ -12,10 +11,11 @@ func parseTxData(tx *types.Transaction, sender common.Address, status uint64) *T
 	var txd TransactionDetail
 	txd.From = sender.String()
 	txd.To = tx.To().String()
-	txd.Value = tx.Value().Int64()
+	txd.Value = tx.Value().Uint64()
 	txd.FunctionSelector = ""
 	txd.LogTopics = ""
 	txd.LogData = ""
+	txd.Input = ""
 	txd.CallLevel = 1
 	txd.CallPosition = 1
 	txd.TxType = "Transfer"
@@ -27,21 +27,57 @@ func parseTxData(tx *types.Transaction, sender common.Address, status uint64) *T
 	return &txd
 }
 
-func parseTxTraceData(tx *types.Transaction, data map[string]interface{}, sender common.Address) []*TransactionDetail {
+func parseTxTraceData(tx *types.Transaction, data map[string]interface{}) []*TransactionDetail {
+	var callLevel *uint64
+	var callPosition *uint64
+
+	*callLevel = 1
+	*callPosition = 1
+
 	var txds []*TransactionDetail
 	var resp TracerBody
 
-	jsonString, err := json.Marshal(data)
+	byteData, err := json.Marshal(data)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(jsonString))
-	// 将 JSON 字符串转换为 string 类型
 
-	err = json.Unmarshal(jsonString, &resp)
+	err = json.Unmarshal(byteData, &resp)
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(resp)
+
+	var txd TransactionDetail
+	txd.From = resp.From
+	txd.To = resp.To
+	txd.Value = hexStringToUint64(resp.Value)
+	txd.FunctionSelector = ""
+
+	// TO DO parse Log
+	txd.LogTopics = ""
+	txd.LogData = ""
+
+	txd.Input = resp.Input
+	txd.CallLevel = *callLevel
+	txd.CallPosition = *callPosition
+	txd.TxType = resp.Type
+	txds = append(txds, &txd)
+
+	for i := 0; i < len(resp.Calls); i++ {
+
+	}
+
 	return txds
+}
+
+func parseTraceData(data TracerBody, level *uint64) {
+
+}
+
+func hexStringToUint64(data string) uint64 {
+	return 0
+}
+
+func findFunctionSignature() {
+
 }

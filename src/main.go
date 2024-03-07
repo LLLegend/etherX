@@ -126,8 +126,9 @@ func main() {
 	fmt.Println("Value: ", value)
 
 	_byteData := bytes.NewReader(value)
-	blkHeader := new(types.StateAccount)
-	_ = rlp.Decode(_byteData, blkHeader)
+	valuedata := new(types.StateAccount)
+	_ = rlp.Decode(_byteData, valuedata)
+	fmt.Println(valuedata)
 
 	//hk := headerKey(hash, number)
 	//header, err := db.Get(hk)
