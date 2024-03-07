@@ -79,6 +79,6 @@ type TracerBody struct {
 
 type TracerResponse struct {
 	JsonRPC string     `json:"jsonrpc"`
-	ID      string     `json:"id"`
+	ID      int        `json:"id"`
 	Result  TracerBody `json:"result"`
 }
