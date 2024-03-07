@@ -116,7 +116,7 @@ func main() {
 	}
 	fmt.Println("state: ", state)
 
-	account := common.HexToHash("0xb4bfEfC30A60B87380e377F8B96CC3b2E65A8F64")
+	account := common.HexToAddress("0xb4bfEfC30A60B87380e377F8B96CC3b2E65A8F64")
 	accountHash := crypto.Keccak256Hash(account.Bytes())
 	codeKey := accountTrieCodeKey(accountHash)
 	value, err := db.Get(codeKey)
