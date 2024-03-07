@@ -125,17 +125,21 @@ func main() {
 	}
 	fmt.Println("Value: ", value)
 
-	hk := headerKey(hash, number)
-	header, err := db.Get(hk)
-	if err != nil {
-		panic(err)
-	}
-	_byteData := bytes.NewReader(header)
-	blkHeader := new(types.Header)
+	_byteData := bytes.NewReader(value)
+	blkHeader := new(types.StateAccount)
 	_ = rlp.Decode(_byteData, blkHeader)
-	//
-	fmt.Printf("Block Hash: %x \n", blkHeader.Hash())
-	fmt.Printf("Block Coinbase: %x \n", blkHeader.Coinbase)
+
+	//hk := headerKey(hash, number)
+	//header, err := db.Get(hk)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//_byteData := bytes.NewReader(header)
+	//blkHeader := new(types.Header)
+	//_ = rlp.Decode(_byteData, blkHeader)
+	////
+	//fmt.Printf("Block Hash: %x \n", blkHeader.Hash())
+	//fmt.Printf("Block Coinbase: %x \n", blkHeader.Coinbase)
 
 	_ = db.Close()
 }
