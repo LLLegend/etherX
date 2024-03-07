@@ -59,12 +59,18 @@ type OnlyTopCallWithLog struct {
 	WithLog     bool `json:"withLog"`
 }
 
+type TracerBody struct {
+	From    string       `json:"from"`
+	GasUsed string       `json:"gasUsed"`
+	To      string       `json:"to"`
+	Input   string       `json:"input"`
+	Output  string       `json:"output"`
+	Calls   []TracerBody `json:"calls"`
+	Type    string       `json:"type"`
+}
+
 type TracerResponse struct {
-	From    string           `json:"from"`
-	GasUsed string           `json:"gasUsed"`
-	To      string           `json:"to"`
-	Input   string           `json:"input"`
-	Output  string           `json:"output"`
-	Calls   []TracerResponse `json:"calls"`
-	Type    string           `json:"type"`
+	JsonRPC string     `json:"jsonrpc"`
+	ID      string     `json:"id"`
+	Result  TracerBody `json:"result"`
 }

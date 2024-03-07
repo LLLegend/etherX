@@ -37,8 +37,8 @@ func main() {
 	fmt.Println("Successfully connect to Mysql")
 	defer db.Close()
 
-	blockNumber := int64(1)
-	endBlockNumber := int64(1500000)
+	blockNumber := int64(2000000)
+	endBlockNumber := int64(2001000)
 
 	start := time.Now()
 	parentBlock, _ := client.HeaderByNumber(context.Background(), big.NewInt(blockNumber-1))
@@ -73,11 +73,11 @@ func main() {
 		block.Extra = hex.EncodeToString(header.Extra)
 		block.ExternalTxCount = int64(numTx)
 		// TO DO
-		block.InternalTxCount = 0
-		err = insertBlocks(db, block)
-		if err != nil {
-			panic(err)
-		}
+		//block.InternalTxCount = 0
+		//err = insertBlocks(db, block)
+		//if err != nil {
+		//	panic(err)
+		//}
 
 		// Find Tx
 		for j := 0; j < int(numTx); j++ {
@@ -107,7 +107,7 @@ func main() {
 				txd := parseTxData(tx, sender, txReceipt.Status)
 				txds = append(txds, txd)
 			} else {
-				var resp interface{}
+				var resp []byte
 				if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
 					log.Fatal(err)
 				}

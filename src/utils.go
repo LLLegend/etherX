@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"log"
 )
 
 func parseTxData(tx *types.Transaction, sender common.Address, status uint64) *TransactionDetail {
@@ -24,8 +27,13 @@ func parseTxData(tx *types.Transaction, sender common.Address, status uint64) *T
 	return &txd
 }
 
-func parseTxTraceData(tx *types.Transaction, data interface{}, sender common.Address) []*TransactionDetail {
+func parseTxTraceData(tx *types.Transaction, data []byte, sender common.Address) []*TransactionDetail {
 	var txds []*TransactionDetail
-
+	var resp TracerResponse
+	err := json.Unmarshal(data, &resp)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(resp)
 	return txds
 }
