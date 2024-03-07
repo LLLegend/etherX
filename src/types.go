@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"time"
 )
 
@@ -81,9 +80,9 @@ type TracerBody struct {
 }
 
 type TracerResponse struct {
-	JsonRPC float64         `json:"jsonrpc"`
-	ID      int             `json:"id"`
-	Result  json.RawMessage `json:"result"`
+	JsonRPC float64    `json:"jsonrpc"`
+	ID      int        `json:"id"`
+	Result  TracerBody `json:"result"`
 }
 
 //{"jsonrpc":"2.0",

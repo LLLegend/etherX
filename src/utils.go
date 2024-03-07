@@ -28,6 +28,7 @@ func parseTxData(tx *types.Transaction, sender common.Address, status uint64) *T
 }
 
 func parseTxTraceData(tx *types.Transaction, data []byte, sender common.Address) []*TransactionDetail {
+	fmt.Println(data)
 	var txds []*TransactionDetail
 	var resp TracerResponse
 	err := json.Unmarshal(data, &resp)
