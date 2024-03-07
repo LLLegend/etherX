@@ -152,14 +152,17 @@ func receiptKey(hash common.Hash, num uint64) []byte {
 	return append(append(blockReceiptsPrefix, encodeBlockNumber(num)...), hash.Bytes()...)
 }
 
+// SnapshotAccountPrefix + account hash -> account trie value
 func accountTrieValueKey(hash common.Hash) []byte {
 	return append(SnapshotAccountPrefix, hash.Bytes()...)
 }
 
+// CodePrefix + code hash -> account code
 func accountTrieCodeKey(hash common.Hash) []byte {
 	return append(CodePrefix, hash.Bytes()...)
 }
 
+// SnapshotStoragePrefix + account hash + storage hash -> storage trie value
 func accountTrieStorageKey(account common.Hash, storageRoot common.Hash) []byte {
 	return append(append(SnapshotStoragePrefix, account.Bytes()...), storageRoot.Bytes()...)
 }
