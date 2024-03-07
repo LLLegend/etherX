@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 )
@@ -28,8 +27,5 @@ func parseTxData(tx *types.Transaction, sender common.Address, status uint64) *T
 func parseTxTraceData(tx *types.Transaction, data interface{}, sender common.Address) []*TransactionDetail {
 	var txds []*TransactionDetail
 
-	var tracerResponse TracerResponse
-	tracerResponse = data.(TracerResponse)
-	fmt.Println(tracerResponse)
 	return txds
 }

@@ -43,8 +43,8 @@ func main() {
 	start := time.Now()
 	parentBlock, _ := client.HeaderByNumber(context.Background(), big.NewInt(blockNumber-1))
 	parentHash := parentBlock.Hash().String()
-	// onlyTopCallWithLog := OnlyTopCallWithLog{OnlyTopCall: false, WithLog: true}
-	// tracerConfig := TracerConfig{Tracer: "callTracer", TracerConfig: onlyTopCallWithLog}
+	onlyTopCallWithLog := OnlyTopCallWithLog{OnlyTopCall: false, WithLog: true}
+	tracerConfig := TracerConfig{Tracer: "callTracer", TracerConfig: onlyTopCallWithLog}
 
 	txnum := 0
 	numi := 0
@@ -72,85 +72,90 @@ func main() {
 		block.Difficulty = header.Difficulty.Uint64()
 		block.Extra = hex.EncodeToString(header.Extra)
 		block.ExternalTxCount = int64(numTx)
+		// TO DO
 		block.InternalTxCount = 0
 		err = insertBlocks(db, block)
 		if err != nil {
 			panic(err)
 		}
+
 		// Find Tx
-		//for j := 0; j < int(numTx); j++ {
-		//	var txb *TransactionBackground
-		//	txb = new(TransactionBackground)
-		//
-		//	//var txds []*TransactionDetail
-		//
-		//	// Get Tx
-		//	tx, err := client.TransactionInBlock(context.Background(), blockHash, uint(j))
-		//	if err != nil {
-		//		panic(err)
-		//	}
-		//	//// Get Sender in the Tx
-		//	//sender, err := client.TransactionSender(context.Background(), tx, blockHash, uint(j))
-		//	//if err != nil {
-		//	//	panic(err)
-		//	//}
-		//	// Tx that doesn't have internal Tx
-		//	if len(tx.Data()) == 0 {
-		//		//txReceipt, err := client.TransactionReceipt(context.Background(), tx.Hash())
-		//		//if err != nil {
-		//		//	panic(err)
-		//		//}
-		//		// txd := parseTxData(tx, sender, txReceipt.Status)
-		//		// txds = append(txds, txd)
-		//	} else {
-		//		var resp interface{}
-		//		if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
-		//			log.Fatal(err)
-		//		}
-		//		// txd := parseTxTraceData(tx, resp, sender)
-		//		// txds = append(txds, txd...)
-		//		numi += 1
-		//
-		//	}
-		//	txb.BlockNumber = i
-		//	txb.TxHash = tx.Hash().String()
-		//	txb.PositionInBlock = j
-		//	txb.GasLimit = tx.Gas()
-		//	txb.Timestamp = tx.Time()
-		//	txb.Nonce = tx.Nonce()
-		//
-		//	txnum += 1
-		//
-		//}
+		for j := 0; j < int(numTx); j++ {
+			var txb *TransactionBackground
+			txb = new(TransactionBackground)
 
-		parentHash = block.BlockHash
+			var txds []*TransactionDetail
+
+			// Get Tx by position
+			tx, err := client.TransactionInBlock(context.Background(), blockHash, uint(j))
+			if err != nil {
+				panic(err)
+			}
+
+			// Get Sender in the Tx
+			sender, err := client.TransactionSender(context.Background(), tx, blockHash, uint(j))
+			if err != nil {
+				panic(err)
+			}
+
+			// Tx that doesn't have internal Tx
+			if len(tx.Data()) == 0 {
+				txReceipt, err := client.TransactionReceipt(context.Background(), tx.Hash())
+				if err != nil {
+					panic(err)
+				}
+				txd := parseTxData(tx, sender, txReceipt.Status)
+				txds = append(txds, txd)
+			} else {
+				var resp interface{}
+				if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
+					log.Fatal(err)
+				}
+				txd := parseTxTraceData(tx, resp, sender)
+				txds = append(txds, txd...)
+				numi += 1
+
+			}
+			txb.BlockNumber = i
+			txb.TxHash = tx.Hash().String()
+			txb.PositionInBlock = j
+			txb.GasLimit = tx.Gas()
+			txb.Timestamp = tx.Time()
+			txb.Nonce = tx.Nonce()
+			//
+			//	txnum += 1
+			//
+			//}
+
+			parentHash = block.BlockHash
+		}
+
+		//client.Client().Call()
+
+		// header, err := client.HeaderByNumber(context.Background(), big.NewInt(4000000))
+
+		//fmt.Println("Block Number: ", header.Number)
+		//fmt.Println("Block Hash: ", header.Hash())
+		//fmt.Println("Block Coinbase: ", header.Coinbase)
+		//fmt.Println("Block gasUsed: ", header.GasUsed)
+		//fmt.Println("Block Time: ", header.Time)
+		//fmt.Println("Tx Hash: ", header.TxHash)
+		//fmt.Println("size: ", header.Size())
+		//fmt.Println("numTx: ", numTx)
+		//
+		//bHash := rpc.BlockNumberOrHash{BlockHash: &blockHash}
+		//receipts, err := client.BlockReceipts(context.Background(), bHash)
+		//fmt.Println("Block Receipts: ", receipts)
+		//
+		//tx, err := client.TransactionInBlock(context.Background(), blockHash, 0)
+		//txReceipt, err := client.TransactionReceipt(context.Background(), tx.Hash())
+		//fmt.Println("tx to: ", tx.To())
+		//fmt.Println("tx input data: ", tx.Data())
+		//fmt.Println("tx Receipts BlockHash: ", txReceipt.BlockHash)
+		fmt.Println("Using ", time.Since(start))
+		fmt.Println("Num Tx contains internal Tx", numi)
+		fmt.Println("Total Tx: ", txnum)
+		//
+
 	}
-
-	//client.Client().Call()
-
-	// header, err := client.HeaderByNumber(context.Background(), big.NewInt(4000000))
-
-	//fmt.Println("Block Number: ", header.Number)
-	//fmt.Println("Block Hash: ", header.Hash())
-	//fmt.Println("Block Coinbase: ", header.Coinbase)
-	//fmt.Println("Block gasUsed: ", header.GasUsed)
-	//fmt.Println("Block Time: ", header.Time)
-	//fmt.Println("Tx Hash: ", header.TxHash)
-	//fmt.Println("size: ", header.Size())
-	//fmt.Println("numTx: ", numTx)
-	//
-	//bHash := rpc.BlockNumberOrHash{BlockHash: &blockHash}
-	//receipts, err := client.BlockReceipts(context.Background(), bHash)
-	//fmt.Println("Block Receipts: ", receipts)
-	//
-	//tx, err := client.TransactionInBlock(context.Background(), blockHash, 0)
-	//txReceipt, err := client.TransactionReceipt(context.Background(), tx.Hash())
-	//fmt.Println("tx to: ", tx.To())
-	//fmt.Println("tx input data: ", tx.Data())
-	//fmt.Println("tx Receipts BlockHash: ", txReceipt.BlockHash)
-	fmt.Println("Using ", time.Since(start))
-	fmt.Println("Num Tx contains internal Tx", numi)
-	fmt.Println("Total Tx: ", txnum)
-	//
-
 }

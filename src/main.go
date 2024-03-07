@@ -118,12 +118,12 @@ func main() {
 
 	account := common.HexToAddress("0xb4bfEfC30A60B87380e377F8B96CC3b2E65A8F64")
 	accountHash := crypto.Keccak256Hash(account.Bytes())
-	codeKey := accountTrieCodeKey(accountHash)
+	codeKey := accountTrieValueKey(accountHash)
 	value, err := db.Get(codeKey)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Code: ", value)
+	fmt.Println("Value: ", value)
 
 	hk := headerKey(hash, number)
 	header, err := db.Get(hk)
