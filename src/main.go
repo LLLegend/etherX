@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/rlp"
 )
 
@@ -115,7 +116,8 @@ func main() {
 	}
 	fmt.Println("state: ", state)
 
-	accountHash := common.HexToHash("0xb4bfEfC30A60B87380e377F8B96CC3b2E65A8F64")
+	account := common.HexToHash("0xb4bfEfC30A60B87380e377F8B96CC3b2E65A8F64")
+	accountHash := crypto.Keccak256Hash(account.Bytes())
 	codeKey := accountTrieCodeKey(accountHash)
 	value, err := db.Get(codeKey)
 	if err != nil {
