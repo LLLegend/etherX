@@ -35,10 +35,10 @@ func parseTxTraceData(tx *types.Transaction, data map[string]interface{}, sender
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(jsonString)
+
 	// 将 JSON 字符串转换为 string 类型
-	str := string(jsonString)
-	err = json.Unmarshal([]byte(fmt.Sprintf("%v", str)), &resp)
+
+	err = json.Unmarshal(jsonString, &resp)
 	if err != nil {
 		log.Println(err)
 	}
