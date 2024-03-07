@@ -24,9 +24,9 @@ func main() {
 		Handles: 2048, ReadOnly: false, Ephemeral: false}
 	db, _ := openKeyValueDatabase(config)
 
-	// 4100000 - 4101000
-	blockNumber := uint64(4101101)
-	endBlockNumber := uint64(4101200)
+	// 4100000 - 4101200 10 -100
+	blockNumber := uint64(10)
+	endBlockNumber := uint64(100)
 
 	total := int64(0)
 	for i := blockNumber; i <= endBlockNumber; i++ {
@@ -43,8 +43,8 @@ func main() {
 		since := time.Since(start)
 		fmt.Println("Delete Block ", i, " Using ", since)
 
-		total += since.Milliseconds()
+		total += since.Nanoseconds()
 	}
-	fmt.Println("Total delete ms: ", total/100.0)
+	fmt.Println("Total delete ns: ", float64(total)/100.0)
 
 }
