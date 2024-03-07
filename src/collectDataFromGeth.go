@@ -100,7 +100,6 @@ func main() {
 
 			// Tx that doesn't have internal Tx
 			if len(tx.Data()) == 0 {
-				fmt.Println("11111")
 				txReceipt, err := client.TransactionReceipt(context.Background(), tx.Hash())
 				if err != nil {
 					panic(err)
@@ -108,7 +107,6 @@ func main() {
 				txd := parseTxData(tx, sender, txReceipt.Status)
 				txds = append(txds, txd)
 			} else {
-				fmt.Println("2222")
 				var resp interface{}
 				if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
 					log.Fatal(err)
