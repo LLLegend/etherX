@@ -118,8 +118,8 @@ func main() {
 
 	account := common.HexToAddress("0xb4bfEfC30A60B87380e377F8B96CC3b2E65A8F64")
 	accountHash := crypto.Keccak256Hash(account.Bytes())
-	codeKey := accountTrieValueKey(accountHash)
-	value, err := db.Get(codeKey)
+	valueKey := accountTrieValueKey(accountHash)
+	value, err := db.Get(valueKey)
 	if err != nil {
 		panic(err)
 	}
@@ -129,6 +129,22 @@ func main() {
 	valuedata := new(types.StateAccount)
 	_ = rlp.Decode(_byteData, valuedata)
 	fmt.Println(valuedata)
+
+	storageHash := valuedata.Root
+	codeHash := common.BytesToHash(valuedata.CodeHash)
+	codeKey := accountTrieCodeKey(codeHash)
+	code, err := db.Get(codeKey)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("code: ", code)
+
+	storageKey := accountTrieStorageKey(accountHash, storageHash)
+	storage, err := db.Get(storageKey)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("storage: ", storage)
 
 	//hk := headerKey(hash, number)
 	//header, err := db.Get(hk)

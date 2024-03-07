@@ -160,6 +160,6 @@ func accountTrieCodeKey(hash common.Hash) []byte {
 	return append(CodePrefix, hash.Bytes()...)
 }
 
-func accountTrieStorageKey(hash common.Hash) []byte {
-	return append(SnapshotStoragePrefix, hash.Bytes()...)
+func accountTrieStorageKey(account common.Hash, storageRoot common.Hash) []byte {
+	return append(append(SnapshotStoragePrefix, account.Bytes()...), storageRoot.Bytes()...)
 }
