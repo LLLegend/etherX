@@ -69,12 +69,14 @@ type LogBody struct {
 type TracerBody struct {
 	From    string       `json:"from"`
 	GasUsed string       `json:"gasUsed"`
+	Gas     string       `json:"gas"`
 	To      string       `json:"to"`
 	Input   string       `json:"input"`
-	Output  string       `json:"output"`
-	Calls   []TracerBody `json:"calls"`
+	Output  string       `json:"output,omitempty"`
+	Calls   []TracerBody `json:"calls,omitempty"`
 	Type    string       `json:"type"`
-	Logs    []LogBody    `json:"logs"`
+	Logs    []LogBody    `json:"logs,omitempty"`
+	Value   string       `json:"value"`
 }
 
 type TracerResponse struct {
