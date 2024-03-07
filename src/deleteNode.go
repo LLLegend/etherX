@@ -25,8 +25,8 @@ func main() {
 	db, _ := openKeyValueDatabase(config)
 
 	// 4100000 - 4101000
-	blockNumber := uint64(4101001)
-	endBlockNumber := uint64(4101100)
+	blockNumber := uint64(4101101)
+	endBlockNumber := uint64(4101200)
 
 	total := int64(0)
 	for i := blockNumber; i <= endBlockNumber; i++ {
@@ -45,6 +45,6 @@ func main() {
 
 		total += since.Milliseconds()
 	}
-	fmt.Println("Total delete ms: ", total)
+	fmt.Println("Total delete ms: ", total/100.0)
 
 }
