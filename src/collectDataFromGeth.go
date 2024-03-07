@@ -38,7 +38,7 @@ func main() {
 	defer db.Close()
 
 	blockNumber := int64(2000000)
-	endBlockNumber := int64(2001000)
+	endBlockNumber := int64(2000010)
 
 	start := time.Now()
 	parentBlock, _ := client.HeaderByNumber(context.Background(), big.NewInt(blockNumber-1))
