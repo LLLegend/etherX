@@ -29,7 +29,7 @@ func parseTxData(tx *types.Transaction, sender common.Address, status uint64) *T
 
 func parseTxTraceData(tx *types.Transaction, data map[string]interface{}, sender common.Address) []*TransactionDetail {
 	var txds []*TransactionDetail
-	var resp TracerResponse
+	var resp TracerBody
 
 	jsonString, err := json.Marshal(data)
 	if err != nil {
@@ -42,6 +42,6 @@ func parseTxTraceData(tx *types.Transaction, data map[string]interface{}, sender
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(resp.Result)
+	fmt.Println(resp)
 	return txds
 }

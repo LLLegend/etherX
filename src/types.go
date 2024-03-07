@@ -79,12 +79,6 @@ type TracerBody struct {
 	Value   string       `json:"value"`
 }
 
-type TracerResponse struct {
-	JsonRPC float64    `json:"jsonrpc"`
-	ID      int        `json:"id"`
-	Result  TracerBody `json:"result"`
-}
-
 //{"jsonrpc":"2.0",
 //	"id":1,
 //	"result":
