@@ -109,11 +109,11 @@ func main() {
 				txds = append(txds, txd)
 			} else {
 				fmt.Println("2222")
-				var resp []byte
+				var resp interface{}
 				if err := rpcClient.Call(&resp, "debug_traceTransaction", tx.Hash().String(), tracerConfig); err != nil {
 					log.Fatal(err)
 				}
-				txd := parseTxTraceData(tx, resp, sender)
+				txd := parseTxTraceData(tx, []byte(fmt.Sprintf("%v", resp)), sender)
 				txds = append(txds, txd...)
 				numi += 1
 
