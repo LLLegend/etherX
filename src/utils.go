@@ -27,10 +27,18 @@ func parseTxData(tx *types.Transaction, sender common.Address, status uint64) *T
 	return &txd
 }
 
-func parseTxTraceData(tx *types.Transaction, data []byte, sender common.Address) []*TransactionDetail {
+func parseTxTraceData(tx *types.Transaction, data map[string]interface{}, sender common.Address) []*TransactionDetail {
 	var txds []*TransactionDetail
 	var resp TracerResponse
-	err := json.Unmarshal(data, &resp)
+
+	jsonString, err := json.Marshal(data)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(jsonString)
+	// 将 JSON 字符串转换为 string 类型
+	str := string(jsonString)
+	err = json.Unmarshal([]byte(fmt.Sprintf("%v", str)), &resp)
 	if err != nil {
 		log.Println(err)
 	}
