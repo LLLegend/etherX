@@ -12,7 +12,7 @@ import (
 func main() {
 
 	pebblePath := "/home/node01/Documents/eth-data-2/geth/chaindata/"
-	pebbleAncientPath := "/home/node01/Documents/eth-data/geth/chaindata/ancient/chain"
+	pebbleAncientPath := "/home/node01/Documents/eth-data-2/geth/chaindata/ancient/chain"
 
 	client, err := ethclient.Dial("https://mainnet.infura.io/v3/d4cee2a05a2d453a8f83b7b3f9f89b75")
 	defer client.Close()

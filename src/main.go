@@ -11,8 +11,8 @@ import (
 )
 
 func main() {
-	pebblePath := "/home/node01/Documents/eth-data/geth/chaindata/"
-	pebbleAncientPath := "/home/node01/Documents/eth-data/geth/chaindata/ancient/chain"
+	pebblePath := "/home/node01/Documents/eth-data-2/geth/chaindata/"
+	pebbleAncientPath := "/home/node01/Documents/eth-data-2/geth/chaindata/ancient/chain"
 
 	fmt.Println("------------------ Get data from pebble-------------------")
 
