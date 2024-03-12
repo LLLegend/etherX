@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	pebblePath := "/home/node01/Documents/eth-data/geth/chaindata/"
+	pebblePath := "/home/node01/Documents/eth-data-2/geth/chaindata/"
 	pebbleAncientPath := "/home/node01/Documents/eth-data/geth/chaindata/ancient/chain"
 
 	client, err := ethclient.Dial("https://mainnet.infura.io/v3/d4cee2a05a2d453a8f83b7b3f9f89b75")
@@ -26,7 +26,7 @@ func main() {
 
 	// 4100000 - 4101200 10 -100
 	blockNumber := uint64(10)
-	endBlockNumber := uint64(100)
+	endBlockNumber := uint64(100000)
 
 	total := int64(0)
 	for i := blockNumber; i <= endBlockNumber; i++ {
@@ -45,6 +45,6 @@ func main() {
 
 		total += since.Nanoseconds()
 	}
-	fmt.Println("Total delete ns: ", float64(total)/100.0)
+	fmt.Println("Average delete ns: ", float64(total)/100.0)
 
 }
