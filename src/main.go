@@ -52,8 +52,6 @@ func main() {
 	_ = rlp.Decode(_byteData, valuedata)
 	fmt.Println(valuedata)
 
-
-
 	codeHash := common.BytesToHash(valuedata.CodeHash)
 	codeKey := accountTrieCodeKey(codeHash)
 	code, err := db.Get(codeKey)
@@ -61,8 +59,6 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("code: ", code)
-
-	fmt.Println("state root Hash: ", valuedata.)
 
 	storageRootHash := valuedata.Root
 	storageKey := accountTrieStorageKey(accountHash, storageRootHash)
